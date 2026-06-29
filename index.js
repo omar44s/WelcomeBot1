@@ -30,11 +30,11 @@ client.on('guildMemberAdd', async (member) => {
         const canvas = Canvas.createCanvas(1000, 667);
         const ctx = canvas.getContext('2d');
 
-        // الخلفية
+        // تحميل الخلفية
         const background = await Canvas.loadImage('./welcome.png');
         ctx.drawImage(background, 0, 0, canvas.width, canvas.height);
 
-        // صورة العضو
+        // تحميل صورة العضو
         const avatar = await Canvas.loadImage(
             member.user.displayAvatarURL({
                 extension: 'png',
@@ -42,30 +42,31 @@ client.on('guildMemberAdd', async (member) => {
             })
         );
 
-        // قص الصورة داخل الدائرة
+        // وضع صورة العضو داخل الدائرة
         ctx.save();
 
         ctx.beginPath();
-        ctx.arc(280, 300, 105, 0, Math.PI * 2, true);
+        ctx.arc(225, 295, 90, 0, Math.PI * 2, true);
         ctx.closePath();
         ctx.clip();
 
-        // مكان وحجم صورة العضو
-        ctx.drawImage(avatar, 175, 195, 210, 210);
+        ctx.drawImage(avatar, 135, 205, 180, 180);
 
         ctx.restore();
 
-        // إنشاء الصورة النهائية
+        // إنشاء الصورة
         const attachment = new AttachmentBuilder(
             canvas.toBuffer('image/png'),
             { name: 'welcome.png' }
         );
 
-        // إرسال الصورة مع الرسالة أسفلها
+        // إرسال الصورة ورسالة الترحيب
         await channel.send({
             content: `##  أهلاً بك ${member}`,
             files: [attachment]
         });
+
+        console.log(`Welcome sent to ${member.user.tag}`);
 
     } catch (error) {
         console.log(error);
