@@ -28,8 +28,8 @@ client.on('guildMemberAdd', async (member) => {
     const ctx = canvas.getContext('2d');
 
     // صورة الخلفية
-    const background = await Canvas.loadImage('./welcome.png');
-    ctx.drawImage(background, 0, 0, canvas.width, canvas.height);
+// const background = await Canvas.loadImage('./welcome.png');
+// ctx.drawImage(background, 0, 0, canvas.width, canvas.height);
 
     // صورة العضو
     const avatar = await Canvas.loadImage(
