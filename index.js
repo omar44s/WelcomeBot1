@@ -19,28 +19,21 @@ client.once('clientReady', () => {
 
 client.on('guildMemberAdd', async (member) => {
 
-    console.log(`${member.user.tag} joined the server`);
-
     // آيدي روم الترحيب
     const channel = member.guild.channels.cache.get('1520694287476588627');
 
-    if (!channel) {
-        console.log('❌ Channel not found');
-        return;
-    }
-
-    console.log('✅ Channel found');
+    if (!channel) return;
 
     try {
 
         const canvas = Canvas.createCanvas(1024, 500);
         const ctx = canvas.getContext('2d');
 
-        // خلفية سوداء مؤقتة للتجربة
-        ctx.fillStyle = '#000000';
-        ctx.fillRect(0, 0, canvas.width, canvas.height);
+        // تحميل الخلفية
+        const background = await Canvas.loadImage('./welcome.png');
+        ctx.drawImage(background, 0, 0, canvas.width, canvas.height);
 
-        // صورة العضو
+        // تحميل صورة العضو
         const avatar = await Canvas.loadImage(
             member.user.displayAvatarURL({
                 extension: 'png',
@@ -48,39 +41,45 @@ client.on('guildMemberAdd', async (member) => {
             })
         );
 
+        // مكان صورة العضو
         ctx.save();
+
         ctx.beginPath();
-        ctx.arc(512, 180, 90, 0, Math.PI * 2, true);
+        ctx.arc(290, 250, 115, 0, Math.PI * 2, true);
         ctx.closePath();
         ctx.clip();
 
-        ctx.drawImage(avatar, 422, 90, 180, 180);
+        ctx.drawImage(avatar, 175, 135, 230, 230);
+
         ctx.restore();
 
-        // النص
-        ctx.fillStyle = '#ffffff';
+        // اسم العضو
+        ctx.fillStyle = '#FFFFFF';
         ctx.textAlign = 'center';
-
         ctx.font = 'bold 45px sans-serif';
-        ctx.fillText(member.user.username, 512, 360);
 
-        ctx.font = '30px sans-serif';
-        ctx.fillText('Welcome To The Server', 512, 410);
+        ctx.fillText(
+            member.user.username,
+            760,
+            410
+        );
 
+        // إنشاء الصورة
         const attachment = new AttachmentBuilder(
             canvas.toBuffer('image/png'),
             { name: 'welcome.png' }
         );
 
+        // إرسال الرسالة
         await channel.send({
-            content: `أهلاً بك ${member}`,
+            content: ` أهلاً بك ${member} `,
             files: [attachment]
         });
 
-        console.log('✅ Welcome message sent');
+        console.log(`Welcome sent to ${member.user.tag}`);
 
     } catch (error) {
-        console.log('❌ Error:', error);
+        console.log(error);
     }
 });
 
