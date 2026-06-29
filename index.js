@@ -19,21 +19,21 @@ client.once('clientReady', () => {
 
 client.on('guildMemberAdd', async (member) => {
 
-    // آيدي روم الترحيب
     const channel = member.guild.channels.cache.get('1520694287476588627');
 
     if (!channel) return;
 
     try {
 
-        const canvas = Canvas.createCanvas(1024, 500);
+        // حجم الصورة الجديد
+        const canvas = Canvas.createCanvas(800, 450);
         const ctx = canvas.getContext('2d');
 
-        // تحميل الخلفية
+        // الخلفية
         const background = await Canvas.loadImage('./welcome.png');
-        ctx.drawImage(background, 0, 0, canvas.width, canvas.height);
+        ctx.drawImage(background, 0, 0, 800, 450);
 
-        // تحميل صورة العضو
+        // صورة العضو
         const avatar = await Canvas.loadImage(
             member.user.displayAvatarURL({
                 extension: 'png',
@@ -41,42 +41,28 @@ client.on('guildMemberAdd', async (member) => {
             })
         );
 
-        // مكان صورة العضو
+        // مكان صورة العضو داخل الدائرة
         ctx.save();
 
         ctx.beginPath();
-        ctx.arc(290, 250, 115, 0, Math.PI * 2, true);
+        ctx.arc(225, 225, 85, 0, Math.PI * 2, true);
+
         ctx.closePath();
         ctx.clip();
 
-        ctx.drawImage(avatar, 175, 135, 230, 230);
+        ctx.drawImage(avatar, 140, 140, 170, 170);
 
         ctx.restore();
 
-        // اسم العضو
-        ctx.fillStyle = '#FFFFFF';
-        ctx.textAlign = 'center';
-        ctx.font = 'bold 45px sans-serif';
-
-        ctx.fillText(
-            member.user.username,
-            760,
-            410
-        );
-
-        // إنشاء الصورة
         const attachment = new AttachmentBuilder(
             canvas.toBuffer('image/png'),
             { name: 'welcome.png' }
         );
 
-        // إرسال الرسالة
         await channel.send({
             content: ` أهلاً بك ${member} `,
             files: [attachment]
         });
-
-        console.log(`Welcome sent to ${member.user.tag}`);
 
     } catch (error) {
         console.log(error);
