@@ -26,14 +26,13 @@ client.on('guildMemberAdd', async (member) => {
 
     try {
 
+        // إنشاء اللوحة
         const canvas = Canvas.createCanvas(1000, 667);
         const ctx = canvas.getContext('2d');
 
         // الخلفية
         const background = await Canvas.loadImage('./welcome.png');
-
-        // تكبير الخلفية وإزاحتها لليسار
-        ctx.drawImage(background, -80, 0, 1150, 667);
+        ctx.drawImage(background, 0, 0, canvas.width, canvas.height);
 
         // صورة العضو
         const avatar = await Canvas.loadImage(
@@ -43,42 +42,30 @@ client.on('guildMemberAdd', async (member) => {
             })
         );
 
+        // قص الصورة داخل الدائرة
         ctx.save();
 
-        // مكان الدائرة
         ctx.beginPath();
-        ctx.arc(285, 300, 100, 0, Math.PI * 2, true);
+        ctx.arc(280, 300, 105, 0, Math.PI * 2, true);
         ctx.closePath();
         ctx.clip();
 
-        // مكان صورة العضو
-        ctx.drawImage(avatar, 185, 200, 200, 200);
+        // مكان وحجم صورة العضو
+        ctx.drawImage(avatar, 175, 195, 210, 210);
 
         ctx.restore();
 
-        // كتابة النص أسفل الصورة
-        ctx.font = 'bold 50px sans-serif';
-        ctx.fillStyle = '#FFFFFF';
-        ctx.textAlign = 'center';
-
-        ctx.fillText(
-            `أهلاً بك ${member.user.username}`,
-            500,
-            630
-        );
-
-        // إنشاء الصورة
+        // إنشاء الصورة النهائية
         const attachment = new AttachmentBuilder(
             canvas.toBuffer('image/png'),
             { name: 'welcome.png' }
         );
 
-        // إرسال الصورة فقط بدون نص فوق
+        // إرسال الصورة مع الرسالة أسفلها
         await channel.send({
+            content: `##  أهلاً بك ${member}`,
             files: [attachment]
         });
-
-        console.log(`Welcome sent to ${member.user.tag}`);
 
     } catch (error) {
         console.log(error);
