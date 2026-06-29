@@ -43,11 +43,12 @@ client.on('guildMemberAdd', async (member) => {
         ctx.save();
 
         // مكان الدائرة السوداء بالضبط
-        ctx.beginPath();
-        ctx.arc(260, 315, 115, 0, Math.PI * 2, true);
-        ctx.closePath();
-        ctx.clip();
+ctx.beginPath();
+ctx.arc(250, 305, 95, 0, Math.PI * 2, true);
+ctx.closePath();
+ctx.clip();
 
+ctx.drawImage(avatar, 155, 210, 190, 190);
         // مكان صورة العضو داخل الدائرة
         ctx.drawImage(avatar, 145, 200, 230, 230);
 
