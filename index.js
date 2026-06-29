@@ -13,70 +13,75 @@ const client = new Client({
     ]
 });
 
-client.once('ready', () => {
+client.once('clientReady', () => {
     console.log(`${client.user.tag} is online!`);
 });
 
 client.on('guildMemberAdd', async (member) => {
 
+    console.log(`${member.user.tag} joined the server`);
+
     // آيدي روم الترحيب
     const channel = member.guild.channels.cache.get('1520694287476588627');
 
-    if (!channel) return;
+    if (!channel) {
+        console.log('❌ Channel not found');
+        return;
+    }
 
-    const canvas = Canvas.createCanvas(1024, 500);
-    const ctx = canvas.getContext('2d');
+    console.log('✅ Channel found');
 
-    // صورة الخلفية
-// const background = await Canvas.loadImage('./welcome.png');
-// ctx.drawImage(background, 0, 0, canvas.width, canvas.height);
+    try {
 
-    // صورة العضو
-    const avatar = await Canvas.loadImage(
-        member.user.displayAvatarURL({
-            extension: 'png',
-            size: 256
-        })
-    );
+        const canvas = Canvas.createCanvas(1024, 500);
+        const ctx = canvas.getContext('2d');
 
-    ctx.save();
-    ctx.beginPath();
-    ctx.arc(512, 180, 90, 0, Math.PI * 2, true);
-    ctx.closePath();
-    ctx.clip();
+        // خلفية سوداء مؤقتة للتجربة
+        ctx.fillStyle = '#000000';
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-    ctx.drawImage(avatar, 422, 90, 180, 180);
-    ctx.restore();
+        // صورة العضو
+        const avatar = await Canvas.loadImage(
+            member.user.displayAvatarURL({
+                extension: 'png',
+                size: 256
+            })
+        );
 
-    // النص
-    ctx.fillStyle = '#ffffff';
-    ctx.textAlign = 'center';
-    ctx.font = 'bold 45px sans-serif';
+        ctx.save();
+        ctx.beginPath();
+        ctx.arc(512, 180, 90, 0, Math.PI * 2, true);
+        ctx.closePath();
+        ctx.clip();
 
-    ctx.fillText(
-        `${member.user.username}`,
-        512,
-        360
-    );
+        ctx.drawImage(avatar, 422, 90, 180, 180);
+        ctx.restore();
 
-    ctx.font = '30px sans-serif';
+        // النص
+        ctx.fillStyle = '#ffffff';
+        ctx.textAlign = 'center';
 
-    ctx.fillText(
-        'Welcome To The Server',
-        512,
-        410
-    );
+        ctx.font = 'bold 45px sans-serif';
+        ctx.fillText(member.user.username, 512, 360);
 
-    const attachment = new AttachmentBuilder(
-        canvas.toBuffer('image/png'),
-        { name: 'welcome.png' }
-    );
+        ctx.font = '30px sans-serif';
+        ctx.fillText('Welcome To The Server', 512, 410);
 
-    channel.send({
-        content: `أهلاً بك ${member}`,
-        files: [attachment]
-    });
+        const attachment = new AttachmentBuilder(
+            canvas.toBuffer('image/png'),
+            { name: 'welcome.png' }
+        );
 
+        await channel.send({
+            content: `أهلاً بك ${member}`,
+            files: [attachment]
+        });
+
+        console.log('✅ Welcome message sent');
+
+    } catch (error) {
+        console.log('❌ Error:', error);
+    }
 });
 
 client.login(process.env.TOKEN);
