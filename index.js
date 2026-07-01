@@ -30,7 +30,7 @@ client.on('guildMemberAdd', async member => {
         const canvas = Canvas.createCanvas(1024, 1536);
         const ctx = canvas.getContext('2d');
 
-        // الخلفية
+        // صورة الخلفية
         const background = await Canvas.loadImage('./welcome.png');
         ctx.drawImage(background, 0, 0, canvas.width, canvas.height);
 
@@ -38,23 +38,24 @@ client.on('guildMemberAdd', async member => {
         const avatar = await Canvas.loadImage(
             member.user.displayAvatarURL({
                 extension: 'png',
-                size: 512
+                size: 1024
             })
         );
 
         ctx.save();
 
-        // قص الصورة داخل الدائرة
+        // دائرة القص
         ctx.beginPath();
         ctx.arc(512, 730, 300, 0, Math.PI * 2, true);
         ctx.closePath();
         ctx.clip();
 
-        // مكان صورة العضو (تم إنزالها قليلاً)
-        ctx.drawImage(avatar, 212, 500, 600, 600);
+        // صورة العضو (تم إنزالها للأسفل)
+        ctx.drawImage(avatar, 212, 550, 600, 600);
 
         ctx.restore();
 
+        // إنشاء الصورة
         const attachment = new AttachmentBuilder(
             canvas.toBuffer('image/png'),
             { name: 'welcome-card.png' }
@@ -62,7 +63,7 @@ client.on('guildMemberAdd', async member => {
 
         // إرسال الترحيب
         await channel.send({
-            content: `# 💜 أهلاً بك ${member}`,
+            content: `# 💜 أهلاً بك ${member}\n## مرحباً بك في 7FR STORE`,
             files: [attachment]
         });
 
