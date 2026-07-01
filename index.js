@@ -46,12 +46,12 @@ client.on('guildMemberAdd', async (member) => {
         ctx.save();
 
         ctx.beginPath();
-        ctx.arc(295, 305, 110, 0, Math.PI * 2, true);
+        ctx.arc(245, 245, 85, 0, Math.PI * 2, true);
         ctx.closePath();
         ctx.clip();
 
-        // صورة العضو
-ctx.drawImage(avatar, 220, 205, 220, 220);
+        ctx.drawImage(avatar, 160, 160, 170, 170);
+
         ctx.restore();
 
         // إنشاء الصورة النهائية
