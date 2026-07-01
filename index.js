@@ -19,12 +19,14 @@ client.once('clientReady', () => {
 
 client.on('guildMemberAdd', async member => {
 
+    // آيدي روم الترحيب
     const channel = member.guild.channels.cache.get('1520694287476588627');
 
     if (!channel) return;
 
     try {
 
+        // مقاس الصورة
         const canvas = Canvas.createCanvas(1024, 1536);
         const ctx = canvas.getContext('2d');
 
@@ -42,14 +44,14 @@ client.on('guildMemberAdd', async member => {
 
         ctx.save();
 
-        // الدائرة
+        // قص الصورة داخل الدائرة
         ctx.beginPath();
         ctx.arc(512, 730, 300, 0, Math.PI * 2, true);
         ctx.closePath();
         ctx.clip();
 
-        // صورة العضو
-        ctx.drawImage(avatar, 212, 430, 600, 600);
+        // مكان صورة العضو (تم إنزالها قليلاً)
+        ctx.drawImage(avatar, 212, 500, 600, 600);
 
         ctx.restore();
 
@@ -58,13 +60,14 @@ client.on('guildMemberAdd', async member => {
             { name: 'welcome-card.png' }
         );
 
+        // إرسال الترحيب
         await channel.send({
-            content: `💜 | أهلاً بك ${member}`,
+            content: `# 💜 أهلاً بك ${member}`,
             files: [attachment]
         });
 
-    } catch (err) {
-        console.log(err);
+    } catch (error) {
+        console.log(error);
     }
 
 });
