@@ -1,10 +1,9 @@
 const {
     Client,
     GatewayIntentBits,
+    EmbedBuilder,
     AttachmentBuilder
 } = require('discord.js');
-
-const Canvas = require('canvas');
 
 const client = new Client({
     intents: [
@@ -19,56 +18,67 @@ client.once('clientReady', () => {
 
 client.on('guildMemberAdd', async (member) => {
 
-    // آيدي روم الترحيب
-    const channel = member.guild.channels.cache.get('1520694287476588627');
-
+    const channel = member.guild.channels.cache.get('YOUR_CHANNEL_ID');
     if (!channel) return;
 
-    try {
+    // البنر الموجود داخل ملفات البوت
+    const banner = new AttachmentBuilder('./banner.png');
 
-        // إنشاء اللوحة
-        const canvas = Canvas.createCanvas(1000, 667);
-        const ctx = canvas.getContext('2d');
+    const embed = new EmbedBuilder()
+        .setColor('#B266FF')
 
-        // تحميل الخلفية
-        const background = await Canvas.loadImage('./welcome.png');
-        ctx.drawImage(background, 0, 0, canvas.width, canvas.height);
+        .setAuthor({
+            name: member.user.username,
+            iconURL: member.user.displayAvatarURL()
+        })
 
-        // تحميل صورة العضو
-        const avatar = await Canvas.loadImage(
+        .setTitle('💜 Welcome To 7FR STORE ™')
+
+        .setDescription(`
+**مرحباً بك في 7FR STORE**
+
+نتمنى لك وقتاً ممتعاً معنا ✨
+        `)
+
+        .addFields(
+            {
+                name: '👤 Member',
+                value: `${member}`,
+                inline: true
+            },
+            {
+                name: '📅 Create Discord',
+                value: `<t:${Math.floor(member.user.createdTimestamp / 1000)}:R>`,
+                inline: true
+            },
+            {
+                name: '📈 Members',
+                value: `${member.guild.memberCount}`,
+                inline: true
+            }
+        )
+
+        .setThumbnail(
             member.user.displayAvatarURL({
                 extension: 'png',
                 size: 512
             })
-        );
+        )
 
-        // وضع صورة العضو داخل الدائرة
-        ctx.save();
+        .setImage('attachment://banner.png')
 
-        ctx.beginPath();
-        ctx.arc(245, 245, 85, 0, Math.PI * 2, true);
-        ctx.closePath();
-        ctx.clip();
+        .setFooter({
+            text: 'Powered By | 7FR STORE 💜'
+        })
 
-        ctx.drawImage(avatar, 160, 160, 170, 170);
+        .setTimestamp();
 
-        ctx.restore();
+    channel.send({
+        content: `${member}`,
+        embeds: [embed],
+        files: [banner]
+    });
 
-        // إنشاء الصورة النهائية
-        const attachment = new AttachmentBuilder(
-            canvas.toBuffer('image/png'),
-            { name: 'welcome.png' }
-        );
-
-        // إرسال الترحيب
-        await channel.send({
-            content: `# أهلاً بك ${member}`,
-            files: [attachment]
-        });
-
-    } catch (error) {
-        console.log(error);
-    }
 });
 
 client.login(process.env.TOKEN);
