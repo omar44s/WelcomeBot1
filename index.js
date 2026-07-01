@@ -19,18 +19,16 @@ client.once('clientReady', () => {
 
 client.on('guildMemberAdd', async member => {
 
-    // آيدي روم الترحيب
     const channel = member.guild.channels.cache.get('1520694287476588627');
 
     if (!channel) return;
 
     try {
 
-        // مقاس الصورة
         const canvas = Canvas.createCanvas(1024, 1536);
         const ctx = canvas.getContext('2d');
 
-        // صورة الخلفية
+        // الخلفية
         const background = await Canvas.loadImage('./welcome.png');
         ctx.drawImage(background, 0, 0, canvas.width, canvas.height);
 
@@ -46,24 +44,22 @@ client.on('guildMemberAdd', async member => {
 
         // دائرة القص
         ctx.beginPath();
-        ctx.arc(512, 730, 300, 0, Math.PI * 2, true);
+        ctx.arc(512, 730, 250, 0, Math.PI * 2, true);
         ctx.closePath();
         ctx.clip();
 
-        // صورة العضو (تم إنزالها للأسفل)
-        ctx.drawImage(avatar, 212, 550, 600, 600);
+        // صورة العضو (تم ضبطها في المنتصف)
+        ctx.drawImage(avatar, 262, 480, 500, 500);
 
         ctx.restore();
 
-        // إنشاء الصورة
         const attachment = new AttachmentBuilder(
             canvas.toBuffer('image/png'),
             { name: 'welcome-card.png' }
         );
 
-        // إرسال الترحيب
         await channel.send({
-            content: `# 💜 أهلاً بك ${member}\n## مرحباً بك في 7FR STORE`,
+            content: `# 💜 أهلاً بك ${member}`,
             files: [attachment]
         });
 
