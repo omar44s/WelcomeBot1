@@ -19,20 +19,22 @@ client.once('clientReady', () => {
 
 client.on('guildMemberAdd', async (member) => {
 
+    // آيدي روم الترحيب
     const channel = member.guild.channels.cache.get('1520694287476588627');
 
     if (!channel) return;
 
     try {
 
+        // إنشاء اللوحة
         const canvas = Canvas.createCanvas(1000, 667);
         const ctx = canvas.getContext('2d');
 
-        // الخلفية
+        // تحميل الخلفية
         const background = await Canvas.loadImage('./welcome.png');
         ctx.drawImage(background, 0, 0, canvas.width, canvas.height);
 
-        // صورة العضو
+        // تحميل صورة العضو
         const avatar = await Canvas.loadImage(
             member.user.displayAvatarURL({
                 extension: 'png',
@@ -40,27 +42,28 @@ client.on('guildMemberAdd', async (member) => {
             })
         );
 
+        // وضع صورة العضو داخل الدائرة
         ctx.save();
 
-        // مكان الدائرة السوداء بالضبط
-ctx.beginPath();
-ctx.arc(250, 305, 95, 0, Math.PI * 2, true);
-ctx.closePath();
-ctx.clip();
+        ctx.beginPath();
+        ctx.arc(260, 315, 115, 0, Math.PI * 2, true);
+        ctx.closePath();
+        ctx.clip();
 
-ctx.drawImage(avatar, 200, 210, 190, 190);
-        // مكان صورة العضو داخل الدائرة
-        ctx.drawImage(avatar, 145, 200, 230, 230);
+        // تم تحريك الصورة لليمين قليلاً
+        ctx.drawImage(avatar, 165, 200, 230, 230);
 
         ctx.restore();
 
+        // إنشاء الصورة
         const attachment = new AttachmentBuilder(
             canvas.toBuffer('image/png'),
             { name: 'welcome.png' }
         );
 
+        // إرسال الترحيب
         await channel.send({
-            content: `#  أهلاً بك ${member}`,
+            content: `# أهلاً بك ${member}`,
             files: [attachment]
         });
 
