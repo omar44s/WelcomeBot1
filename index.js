@@ -1,8 +1,7 @@
 const {
     Client,
     GatewayIntentBits,
-    EmbedBuilder,
-    AttachmentBuilder
+    EmbedBuilder
 } = require('discord.js');
 
 const client = new Client({
@@ -13,59 +12,49 @@ const client = new Client({
 });
 
 client.once('clientReady', () => {
-    console.log(`${client.user.tag} is online!`);
+    console.log(`${client.user.tag} Online`);
 });
 
-client.on('guildMemberAdd', async (member) => {
+client.on('guildMemberAdd', async member => {
 
-    const channel = member.guild.channels.cache.get('YOUR_CHANNEL_ID');
+    const channel = member.guild.channels.cache.get('1520694287476588627');
     if (!channel) return;
 
-    // البنر الموجود داخل ملفات البوت
-    const banner = new AttachmentBuilder('./banner.png');
-
     const embed = new EmbedBuilder()
-        .setColor('#B266FF')
+
+        .setColor('#A855F7')
 
         .setAuthor({
             name: member.user.username,
-            iconURL: member.user.displayAvatarURL()
+            iconURL: member.user.displayAvatarURL({ dynamic: true })
         })
 
-        .setTitle('💜 Welcome To 7FR STORE ™')
-
-        .setDescription(`
-**مرحباً بك في 7FR STORE**
-
-نتمنى لك وقتاً ممتعاً معنا ✨
-        `)
+        .setTitle('Welcome To 7FR STORE ™')
 
         .addFields(
             {
-                name: '👤 Member',
+                name: '👤 Member :',
                 value: `${member}`,
                 inline: true
             },
             {
-                name: '📅 Create Discord',
+                name: '📅 Create Discord :',
                 value: `<t:${Math.floor(member.user.createdTimestamp / 1000)}:R>`,
                 inline: true
             },
             {
-                name: '📈 Members',
+                name: '📈 Members :',
                 value: `${member.guild.memberCount}`,
                 inline: true
             }
         )
 
         .setThumbnail(
-            member.user.displayAvatarURL({
-                extension: 'png',
-                size: 512
-            })
+            'https://cdn.discordapp.com/embed/avatars/0.png'
         )
 
-        .setImage('attachment://banner.png')
+        // ضع هنا رابط البنر
+        .setImage('https://chatgpt.com/backend-api/estuary/content?id=file_00000000fc5c71f8a95c003fa9a2c85e&ts=495252&p=fs&cid=1&sig=8347dc7aaaf474a2825f5351f4bf55c8c68dd758ea044006ec24c032181e58ab&v=0')
 
         .setFooter({
             text: 'Powered By | 7FR STORE 💜'
@@ -75,8 +64,7 @@ client.on('guildMemberAdd', async (member) => {
 
     channel.send({
         content: `${member}`,
-        embeds: [embed],
-        files: [banner]
+        embeds: [embed]
     });
 
 });
