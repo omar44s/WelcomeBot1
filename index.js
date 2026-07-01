@@ -48,7 +48,7 @@ ctx.arc(250, 305, 95, 0, Math.PI * 2, true);
 ctx.closePath();
 ctx.clip();
 
-ctx.drawImage(avatar, 155, 210, 190, 190);
+ctx.drawImage(avatar, 200, 210, 190, 190);
         // مكان صورة العضو داخل الدائرة
         ctx.drawImage(avatar, 145, 200, 230, 230);
 
