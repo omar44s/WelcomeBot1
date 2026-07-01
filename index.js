@@ -51,7 +51,7 @@ client.on('guildMemberAdd', async (member) => {
         ctx.clip();
 
         // صورة العضو
-ctx.drawImage(avatar, 215, 195, 220, 220);
+ctx.drawImage(avatar, 220, 205, 220, 220);
         ctx.restore();
 
         // إنشاء الصورة النهائية
