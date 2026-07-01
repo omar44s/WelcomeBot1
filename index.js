@@ -50,7 +50,7 @@ client.on('guildMemberAdd', async (member) => {
         ctx.clip();
 
         // صورة العضو داخل الدائرة
-        ctx.drawImage(avatar, 160, 225, 180, 180);
+        ctx.drawImage(avatar, 200, 225, 210, 210);
 
         ctx.restore();
 
