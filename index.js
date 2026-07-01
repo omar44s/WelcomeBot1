@@ -1,8 +1,10 @@
 const {
     Client,
     GatewayIntentBits,
-    EmbedBuilder
+    AttachmentBuilder
 } = require('discord.js');
+
+const Canvas = require('canvas');
 
 const client = new Client({
     intents: [
@@ -18,54 +20,52 @@ client.once('clientReady', () => {
 client.on('guildMemberAdd', async member => {
 
     const channel = member.guild.channels.cache.get('1520694287476588627');
+
     if (!channel) return;
 
-    const embed = new EmbedBuilder()
+    try {
 
-        .setColor('#A855F7')
+        const canvas = Canvas.createCanvas(1024, 1536);
+        const ctx = canvas.getContext('2d');
 
-        .setAuthor({
-            name: member.user.username,
-            iconURL: member.user.displayAvatarURL({ dynamic: true })
-        })
+        // الخلفية
+        const background = await Canvas.loadImage('./welcome.png');
+        ctx.drawImage(background, 0, 0, canvas.width, canvas.height);
 
-        .setTitle('Welcome To 7FR STORE ™')
+        // صورة العضو
+        const avatar = await Canvas.loadImage(
+            member.user.displayAvatarURL({
+                extension: 'png',
+                size: 512
+            })
+        );
 
-        .addFields(
-            {
-                name: '👤 Member :',
-                value: `${member}`,
-                inline: true
-            },
-            {
-                name: '📅 Create Discord :',
-                value: `<t:${Math.floor(member.user.createdTimestamp / 1000)}:R>`,
-                inline: true
-            },
-            {
-                name: '📈 Members :',
-                value: `${member.guild.memberCount}`,
-                inline: true
-            }
-        )
+        ctx.save();
 
-        .setThumbnail(
-            'https://cdn.discordapp.com/embed/avatars/0.png'
-        )
+        // الدائرة
+        ctx.beginPath();
+        ctx.arc(512, 730, 300, 0, Math.PI * 2, true);
+        ctx.closePath();
+        ctx.clip();
 
-        // ضع هنا رابط البنر
-        .setImage('https://chatgpt.com/backend-api/estuary/content?id=file_00000000fc5c71f8a95c003fa9a2c85e&ts=495252&p=fs&cid=1&sig=8347dc7aaaf474a2825f5351f4bf55c8c68dd758ea044006ec24c032181e58ab&v=0')
+        // صورة العضو
+        ctx.drawImage(avatar, 212, 430, 600, 600);
 
-        .setFooter({
-            text: 'Powered By | 7FR STORE 💜'
-        })
+        ctx.restore();
 
-        .setTimestamp();
+        const attachment = new AttachmentBuilder(
+            canvas.toBuffer('image/png'),
+            { name: 'welcome-card.png' }
+        );
 
-    channel.send({
-        content: `${member}`,
-        embeds: [embed]
-    });
+        await channel.send({
+            content: `💜 | أهلاً بك ${member}`,
+            files: [attachment]
+        });
+
+    } catch (err) {
+        console.log(err);
+    }
 
 });
 
