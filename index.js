@@ -42,16 +42,16 @@ client.on('guildMemberAdd', async (member) => {
             })
         );
 
-        // قص صورة العضو داخل الدائرة
+        // وضع صورة العضو داخل الدائرة
         ctx.save();
 
         ctx.beginPath();
-        ctx.arc(255, 300, 95, 0, Math.PI * 2, true);
+        ctx.arc(295, 305, 110, 0, Math.PI * 2, true);
         ctx.closePath();
         ctx.clip();
 
-        // مكان صورة العضو
-        ctx.drawImage(avatar, 160, 205, 190, 190);
+        // صورة العضو
+        ctx.drawImage(avatar, 185, 195, 220, 220);
 
         ctx.restore();
 
